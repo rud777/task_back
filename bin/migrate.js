@@ -1,9 +1,10 @@
-import {Project, Users} from '../models';
+import {Project, Taskes, Users} from '../models';
 
 async function main() {
     for (const Model of [
         Users,
-        Project
+        Project,
+        Taskes
     ]) {
         console.log(Model);
         await Model.sync({alter: true});
@@ -19,7 +20,8 @@ async function main() {
                 phoneNumber: '+37493087375',
                 password: '123456',
                 age: '23',
-                avatar: ''
+                avatar: '',
+                role:'admin'
             })
         console.log(user)
 

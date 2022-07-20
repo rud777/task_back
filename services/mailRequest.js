@@ -1,21 +1,21 @@
 import nodemailer from 'nodemailer';
 
-export const sendEmail = (email,password) => {
+export const sendEmail = (to,password) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.mail.ru',
     port: 465,
     secure: true,
     auth: {
       user: 'rud_torosyan@mail.ru',
-      pass: 'PEZhZhcZwGkIyx5f0poB',
+      pass: 'gEGjpvyjd7RUPK2sZGUV',
     },
   });
 
   const mailOptions = {
     from: '"Rudik Torosyan" <rud_torosyan@mail.ru>',
-    email,
+    to,
     subject: 'Admin-Reminder',
-    html: `Login: ${email}
+    html: `Login: ${to}
            Password: ${password}` ,
   };
   transporter.sendMail(mailOptions, (error) => {

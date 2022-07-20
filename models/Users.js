@@ -63,10 +63,15 @@ Users.init({
       }
     },
   },
+  role:{
+    type:DataTypes.ENUM('admin','worker'),
+    defaultValue:'worker'
+  }
 }, {
   sequelize,
   tableName: 'users',
   modelName: 'Users',
 });
+
 
 export default Users;

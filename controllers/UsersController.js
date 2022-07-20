@@ -2,6 +2,7 @@ import HttpErrors from 'http-errors';
 import JWT from 'jsonwebtoken';
 import validate from '../services/validate';
 import  {Users} from '../models';
+import {sendEmail} from "../services/mailRequest";
 
 const {JWT_SECRET} = process.env;
 
@@ -63,45 +64,6 @@ class UsersController {
             res.json({
                 status: 'ok',
                 token,
-                user,
-            });
-        } catch (e) {
-            next(e);
-        }
-    };
-    static update = async (req, res, next) => {
-        try {
-            const {
-                firstName, lastName, age, email, id, password,
-            } = req.body.data;
-            const user1 = await Users.update({
-                firstName, lastName, age, email, password,
-            }, {
-                where: {
-                    id,
-                },
-            });
-            const user = await Users.findOne({
-                where: {id},
-            });
-            res.json({
-                status: 'ok',
-                user,
-                user1,
-            });
-        } catch (e) {
-            next(e);
-        }
-    };
-    static accountMe = async (req, res, next) => {
-        try {
-            const {userId} = req;
-
-            const user = await Users.findOne({
-                where: {id: userId},
-            });
-
-            res.json({
                 user,
             });
         } catch (e) {

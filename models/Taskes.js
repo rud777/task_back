@@ -1,21 +1,25 @@
 import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../services/sequelize';
-import Users from "./Users";
+import Project from "./Project";
 
 
-class Project extends Model {
+class Taskes extends Model {
 
 }
 
-Project.init({
+Taskes.init({
     id: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
     },
-    projectTitle:{
+    projectTask:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    status:{
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -23,13 +27,15 @@ Project.init({
 
 }, {
     sequelize,
-    tableName: 'project',
-    modelName: 'Project',
+    tableName: 'taskes',
+    modelName: 'Taskes',
 });
-Project.belongsTo(Users, {
-    foreignKey: 'UsersId',
+
+
+Taskes.belongsTo(Project, {
+    foreignKey: 'ProjectId',
     onDelete: 'cascade',
     onUpdate: 'cascade'
 })
 
-export default Project;
+export default Taskes;

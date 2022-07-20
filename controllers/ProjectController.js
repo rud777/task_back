@@ -1,26 +1,28 @@
 import HttpErrors from 'http-errors';
 import {Project, Users} from '../models';
-import validate from "../services/validate";
 
 
 class ProjectController {
-    static add = async (req, res, next) => {
+    static create = async (req, res, next) => {
         try {
-            await validate(req.body, {
-                type: 'required|string|in:New established,Continuous,Finished,Accepted,Denied',
-            });
-            const {title,task,type} = req.body;
-
-            if (!title) {
-                throw HttpErrors(422, {
-                    errors: {
-                        error: ['No Project'],
-                    },
-                });
-            }
+            const UsersId = req.userId
+            console.log(UsersId)
+            const {projectTitle} = req.body;
+            // const exists = await Users.findOne({
+            //     where: {projectTitle},
+            //     attributes: ['id'],
+            // });
+            // if (exists) {
+            //     throw HttpErrors(422, {
+            //         errors: {
+            //             error: ['Project already exists'],
+            //         },
+            //     });
+            // }
 
             const project = await Project.create({
-                title,task,type
+                projectTitle,
+                UsersId
             });
 
             res.json({
@@ -33,20 +35,20 @@ class ProjectController {
     };
     static updateProject = async (req, res, next) => {
         try {
-            await validate(req.body, {
-                type: 'required|string|in:New established,Continuous,Finished,Accepted,Denied',
-            });
             const {
-                title,task,type,id
+                projectTitle,id
             } = req.body.data;
-            const project1 = await Users.update({
-                title,task,type
+            if (!projectTitle){
+                throw HttpErrors(422)
+            }
+            const project1 = await Project.update({
+                projectTitle
             }, {
                 where: {
                     id,
                 },
             });
-            const project = await Users.findOne({
+            const project = await Project.findOne({
                 where: {id},
             });
             res.json({
@@ -58,6 +60,50 @@ class ProjectController {
             next(e);
         }
     };
+    static listProject = async (req, res, next) => {
+        try {
+            const { s = '' } = req.query;
+
+            const where = {}
+
+            if (s) {
+                where.$or = [
+                    { projectTitle: { $like: `%${s}%` } },
+                ]
+            }
+
+            const project = await Project.findAll({
+                where,
+            });
+
+            res.json({
+                status: 'ok',
+                project,
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    static deleteProject = async (req, res, next) => {
+        try {
+            const {id} = req.params
+            console.log(req)
+            if (!id){
+                throw HttpErrors(422)
+            }
+            await Project.destroy({
+                where: {
+                    id
+                },
+            })
+            res.json({
+                status: 'deleted',
+            })
+        } catch (e) {
+            next(e)
+        }
+    }
 
 }
 
