@@ -13,7 +13,7 @@ class UsersController {
                 firstName: 'required|string|min:3',
                 lastName: 'required|string|min:3',
                 age: 'required|string|min:2',
-                gender: 'required|string|in:male,female',
+                gender: 'required|string',
                 email: 'required|email',
                 phoneNumber: 'required|phone',
                 password: 'required|string|min:6',

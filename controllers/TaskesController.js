@@ -6,14 +6,11 @@ import validate from "../services/validate";
 class TaskesController {
     static create = async (req, res, next) => {
         try {
-            await validate(req.body, {
-                status: 'required|string|in:New established,Continuous,Finished,Accepted,Denied',
-            });
-            const {projectTask,status} = req.body;
-            
+            const {projectTask,status,ProjectId} = req.body;
 
-            const project = await Project.create({
-                projectTask,status
+
+            const project = await Taskes.create({
+                projectTask,status,ProjectId
             });
 
             res.json({
@@ -26,51 +23,47 @@ class TaskesController {
     };
     static updateTaskes = async (req, res, next) => {
         try {
-            await validate(req.body, {
-                status: 'required|string|in:New established,Continuous,Finished,Accepted,Denied',
-            });
             const {
-                projectTask,status,id
+                status,id
             } = req.body.data;
-            const project1 = await Users.update({
-                projectTask,status
+            const taskes1 = await Taskes.update({
+               status
             }, {
                 where: {
                     id,
                 },
             });
-            const project = await Users.findOne({
+            const taskes = await Taskes.findOne({
                 where: {id},
             });
             res.json({
                 status: 'ok',
-                project,
-                project1,
+                taskes,
+                taskes1,
             });
         } catch (e) {
             next(e);
         }
     };
-    static deleteTaskes = async (req, res, next) => {
+
+    static listTaskes = async (req, res, next) => {
         try {
-            const {id} = req.params
-            if (!id){
-                throw HttpErrors(422)
-            }
-            await Taskes.destroy({
+            const {ProjectId}=req.query
+
+            const taskes = await Taskes.findAll({
                 where: {
-                    id
-                },
-            })
+                    ProjectId,
+                }
+            });
+
             res.json({
-                status: 'deleted',
-            })
+                status: 'ok',
+                taskes,
+            });
         } catch (e) {
-            next(e)
+            next(e);
         }
     }
-
-
 }
 
 export default TaskesController;

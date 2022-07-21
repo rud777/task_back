@@ -6,7 +6,6 @@ class ProjectController {
     static create = async (req, res, next) => {
         try {
             const UsersId = req.userId
-            console.log(UsersId)
             const {projectTitle} = req.body;
             // const exists = await Users.findOne({
             //     where: {projectTitle},
@@ -38,9 +37,13 @@ class ProjectController {
             const {
                 projectTitle,id
             } = req.body.data;
-            if (!projectTitle){
-                throw HttpErrors(422)
-            }
+            if (!projectTitle) {
+                    throw HttpErrors(422, {
+                        errors: {
+                            error: ['Not value'],
+                        },
+                    });
+                }
             const project1 = await Project.update({
                 projectTitle
             }, {
